@@ -21,12 +21,6 @@ type s3Pool struct {
 	params map[string]string
 }
 
-//Siphonable type is one that can Get or Put files.
-type Siphonable interface {
-	Get(path string) (io.Reader, error)
-	Put(path string, file io.Reader) error
-}
-
 //FilePool type can do implements fundamental file operations.
 type FilePool interface {
 	Info() string
@@ -147,12 +141,6 @@ func (s s3Pool) Get(path string) (io.Reader, error) {
 		Key:    aws.String(filePath),
 	}
 
-	//Get encryption working
-	// if s.params["encryption_key"] != "" {
-	// 	input.SSECustomerAlgorithm = aws.String("AES256")
-	// 	input.SSECustomerKey = aws.String(s.params["encryption_key"])
-	// }
-
 	obj, err := s.client.GetObject(input)
 	if err != nil {
 		return nil, err
@@ -265,13 +253,6 @@ func (s s3Pool) Cp(src string, dest string) error {
 		Key:        aws.String(dPath),
 	}
 
-	// if s.params["encryption_key"] != "" {
-	// 	input.CopySourceSSECustomerAlgorithm = aws.String("AES256")
-	// 	input.CopySourceSSECustomerKey = aws.String(s.params["encryption_key"])
-	// 	input.SSECustomerAlgorithm = aws.String("AES256")
-	// 	input.SSECustomerKey = aws.String(s.params["encryption_key"])
-	// }
-
 	_, err := s.client.CopyObject(input)
 	if err != nil {
 		return err
@@ -294,12 +275,6 @@ func (s s3Pool) Mv(src string, dest string) error {
 		CopySource: aws.String(sBucket + "/" + sPath),
 		Key:        aws.String(dPath),
 	}
-	// if s.params["encryption_key"] != "" {
-	// 	input.CopySourceSSECustomerAlgorithm = aws.String("AES256")
-	// 	input.CopySourceSSECustomerKey = aws.String(s.params["encryption_key"])
-	// 	input.SSECustomerAlgorithm = aws.String("AES256")
-	// 	input.SSECustomerKey = aws.String(s.params["encryption_key"])
-	// }
 
 	_, err := s.client.CopyObject(input)
 	if err != nil {

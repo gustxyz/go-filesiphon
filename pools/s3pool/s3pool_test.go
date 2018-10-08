@@ -68,7 +68,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestPut(t *testing.T) {
-	file, _ := os.Open("awsCreds1.json")
+	file, _ := os.Open("../../awsCreds1.json")
 	defer file.Close()
 	decoder := json.NewDecoder(file)
 	awsCredentials := AwsCredentials{}
